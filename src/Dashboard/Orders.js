@@ -1,27 +1,35 @@
-import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Title from './Title';
+import React, { useEffect } from "react";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import Title from "./Title";
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from "@material-ui/core/IconButton";
 
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
+import FirstPageIcon from "@material-ui/icons/FirstPage";
+import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
+import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
+import LastPageIcon from "@material-ui/icons/LastPage";
 
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Button, Divider, Grid, InputAdornment, TableFooter, TablePagination } from '@material-ui/core';
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
+import {
+  Button,
+  Divider,
+  Grid,
+  InputAdornment,
+  TableFooter,
+  TablePagination,
+} from "@material-ui/core";
 
-import Avatar from '@material-ui/core/Avatar'
+import Avatar from "@material-ui/core/Avatar";
 
-import Modal from '@material-ui/core/Modal';
-import TextField from '@material-ui/core/TextField';
+import Modal from "@material-ui/core/Modal";
+import TextField from "@material-ui/core/TextField";
+import Axios from "axios";
 
 // Generate Order Data
 function createData(id, name, login, salary) {
@@ -29,51 +37,51 @@ function createData(id, name, login, salary) {
 }
 
 const rows = [
-  createData('e0001','hpotter','Harry Potter',1234),
-  createData('e0002','rwesley','Ron Weasley',19234.5),
-  createData('e0003','ssnape','Severus Snape',4000),
-  createData('e0004','rhagrid','Rubeus Hagrid',3999.999),
-  createData('e0005','voldemort','Lord Voldemort',523.4),
-  createData('e0006','gwesley','Ginny Weasley',4000.004),
-  createData('e0007','hgranger','Hermione Granger',0),
-  createData('e0008','adumbledore','Albus Dumbledore',34.23),
-  createData('e0009','dmalfoy','Draco Malfoy',34234.5),
-  createData('e0001','hpotter','Harry Potter',1234),
-  createData('e0002','rwesley','Ron Weasley',19234.5),
-  createData('e0003','ssnape','Severus Snape',4000),
-  createData('e0004','rhagrid','Rubeus Hagrid',3999.999),
-  createData('e0005','voldemort','Lord Voldemort',523.4),
-  createData('e0006','gwesley','Ginny Weasley',4000.004),
-  createData('e0007','hgranger','Hermione Granger',0),
-  createData('e0008','adumbledore','Albus Dumbledore',34.23),
-  createData('e0009','dmalfoy','Draco Malfoy',34234.5),
-  createData('e0001','hpotter','Harry Potter',1234),
-  createData('e0002','rwesley','Ron Weasley',19234.5),
-  createData('e0003','ssnape','Severus Snape',4000),
-  createData('e0004','rhagrid','Rubeus Hagrid',3999.999),
-  createData('e0005','voldemort','Lord Voldemort',523.4),
-  createData('e0006','gwesley','Ginny Weasley',4000.004),
-  createData('e0007','hgranger','Hermione Granger',0),
-  createData('e0008','adumbledore','Albus Dumbledore',34.23),
-  createData('e0009','dmalfoy','Draco Malfoy',34234.5),
-  createData('e0001','hpotter','Harry Potter',1234),
-  createData('e0002','rwesley','Ron Weasley',19234.5),
-  createData('e0003','ssnape','Severus Snape',4000),
-  createData('e0004','rhagrid','Rubeus Hagrid',3999.999),
-  createData('e0005','voldemort','Lord Voldemort',523.4),
-  createData('e0006','gwesley','Ginny Weasley',4000.004),
-  createData('e0007','hgranger','Hermione Granger',0),
-  createData('e0008','adumbledore','Albus Dumbledore',34.23),
-  createData('e0009','dmalfoy','Draco Malfoy',34234.5),
-  createData('e0001','hpotter','Harry Potter',1234),
-  createData('e0002','rwesley','Ron Weasley',19234.5),
-  createData('e0003','ssnape','Severus Snape',4000),
-  createData('e0004','rhagrid','Rubeus Hagrid',3999.999),
-  createData('e0005','voldemort','Lord Voldemort',523.4),
-  createData('e0006','gwesley','Ginny Weasley',4000.004),
-  createData('e0007','hgranger','Hermione Granger',0),
-  createData('e0008','adumbledore','Albus Dumbledore',34.23),
-  createData('e0009','dmalfoy','Draco Malfoy',34234.5),
+  createData("e0001", "hpotter", "Harry Potter", 1234),
+  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
+  createData("e0003", "ssnape", "Severus Snape", 4000),
+  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
+  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
+  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
+  createData("e0007", "hgranger", "Hermione Granger", 0),
+  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
+  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
+  createData("e0001", "hpotter", "Harry Potter", 1234),
+  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
+  createData("e0003", "ssnape", "Severus Snape", 4000),
+  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
+  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
+  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
+  createData("e0007", "hgranger", "Hermione Granger", 0),
+  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
+  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
+  createData("e0001", "hpotter", "Harry Potter", 1234),
+  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
+  createData("e0003", "ssnape", "Severus Snape", 4000),
+  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
+  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
+  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
+  createData("e0007", "hgranger", "Hermione Granger", 0),
+  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
+  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
+  createData("e0001", "hpotter", "Harry Potter", 1234),
+  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
+  createData("e0003", "ssnape", "Severus Snape", 4000),
+  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
+  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
+  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
+  createData("e0007", "hgranger", "Hermione Granger", 0),
+  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
+  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
+  createData("e0001", "hpotter", "Harry Potter", 1234),
+  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
+  createData("e0003", "ssnape", "Severus Snape", 4000),
+  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
+  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
+  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
+  createData("e0007", "hgranger", "Hermione Granger", 0),
+  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
+  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
 ];
 
 const useStyles1 = makeStyles((theme) => ({
@@ -111,24 +119,36 @@ function TablePaginationActions(props) {
         disabled={page === 0}
         aria-label="first page"
       >
-        {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
       </IconButton>
-      <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-        {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label="previous page"
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
       >
-        {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
       >
-        {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
     </div>
   );
@@ -138,10 +158,10 @@ export default function Orders() {
   const useStyles = makeStyles((theme) => ({
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
+      color: "#fff",
     },
     paper: {
-      position: 'absolute',
+      position: "absolute",
       width: 500,
       height: 600,
       backgroundColor: theme.palette.background.paper,
@@ -154,6 +174,7 @@ export default function Orders() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [selectedData, setSelectedData] = React.useState({});
+  const [rows, setRows] = React.useState([]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -187,6 +208,29 @@ export default function Orders() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      let config = {
+        method: "get",
+        url:
+          "http://localhost:3000/users?minSalary=0&maxSalary=4000&offset=1&limit=30&sort=+salary",
+        headers: {},
+      };
+
+      const data = await Axios(config)
+        .then(function (response) {
+          console.log(response.data);
+          return response.data.results;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+      setRows(data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <React.Fragment>
       <Grid container spacing={1}>
@@ -194,7 +238,7 @@ export default function Orders() {
           <TextField
             id="min-sal"
             label="Minimum Salary"
-            onChange={handleChange('minSal')}
+            onChange={handleChange("minSal")}
             value={values.minSal}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
           />
@@ -203,7 +247,7 @@ export default function Orders() {
           <TextField
             id="max-sal"
             label="Maximum Salary"
-            onChange={handleChange('maxSal')}
+            onChange={handleChange("maxSal")}
             value={values.maxSal}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
           />
@@ -211,10 +255,10 @@ export default function Orders() {
       </Grid>
 
       <Title>Employees</Title>
-      <Table >
+      <Table>
         <TableHead>
           <TableRow>
-            <TableCell/>
+            <TableCell />
             <TableCell>Id</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Login</TableCell>
@@ -229,18 +273,29 @@ export default function Orders() {
           ).map((row) => (
             <TableRow>
               <TableCell>
-                <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/3.jpg" />
+                <Avatar
+                  alt="Remy Sharp"
+                  src="https://material-ui.com/static/images/avatar/3.jpg"
+                />
               </TableCell>
               <TableCell>{row.id}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.login}</TableCell>
               <TableCell>S${row.salary}</TableCell>
               <TableCell>
-                <IconButton color="primary" aria-label="Edit Profile" onClick={handleToggle(row)}>
-                  <EditIcon/>
+                <IconButton
+                  color="primary"
+                  aria-label="Edit Profile"
+                  onClick={handleToggle(row)}
+                >
+                  <EditIcon />
                 </IconButton>
-                <IconButton color="secondary" aria-label="Delete Profile" onClick={handleToggle(row)}>
-                  <DeleteIcon/>
+                <IconButton
+                  color="secondary"
+                  aria-label="Delete Profile"
+                  onClick={handleToggle(row)}
+                >
+                  <DeleteIcon />
                 </IconButton>
               </TableCell>
             </TableRow>
@@ -256,7 +311,7 @@ export default function Orders() {
               rowsPerPage={rowsPerPage}
               page={page}
               SelectProps={{
-                inputProps: { 'aria-label': 'rows per page' },
+                inputProps: { "aria-label": "rows per page" },
                 native: true,
               }}
               onChangePage={handleChangePage}
@@ -272,7 +327,11 @@ export default function Orders() {
         onClose={handleClose}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
-        style={{display:'flex',alignItems:'center',justifyContent:'center'}}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
         <div className={classes.paper}>
           <Grid container spacing={0}>
@@ -280,24 +339,36 @@ export default function Orders() {
               <h1 id="simple-modal-title">Edit</h1>
             </Grid>
             <Grid item xs={12}>
-              <Divider/>
+              <Divider />
             </Grid>
 
             <Grid item xs={12}>
               <h3 id="simple-modal-title">{selectedData.id}</h3>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="edit-name" label="Name" defaultValue={selectedData.name}/>
+              <TextField
+                id="edit-name"
+                label="Name"
+                defaultValue={selectedData.name}
+              />
             </Grid>
             <Grid item xs={12}>
-              <TextField id="edit-login" label="Login" defaultValue={selectedData.login}/>
+              <TextField
+                id="edit-login"
+                label="Login"
+                defaultValue={selectedData.login}
+              />
             </Grid>
             <Grid item xs={12}>
-              <TextField id="edit-salary" label="Salary" defaultValue={selectedData.salary}/>
+              <TextField
+                id="edit-salary"
+                label="Salary"
+                defaultValue={selectedData.salary}
+              />
             </Grid>
 
             <Grid item xs={12}>
-              <Divider/>
+              <Divider />
             </Grid>
 
             <Grid item xs={12}>
