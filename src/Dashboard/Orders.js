@@ -1,5 +1,4 @@
 import React from 'react';
-import Link from '@material-ui/core/Link';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -17,12 +16,8 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
-import CancelIcon from '@material-ui/icons/Cancel';
 import { Button, Divider, Grid, InputAdornment, TableFooter, TablePagination } from '@material-ui/core';
 
-import Backdrop from '@material-ui/core/Backdrop';
-
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Avatar from '@material-ui/core/Avatar'
 
 import Modal from '@material-ui/core/Modal';
@@ -151,8 +146,6 @@ export default function Orders() {
       height: 600,
       backgroundColor: theme.palette.background.paper,
       outline: 0,
-      // border: '0px solid #000',
-      // boxShadow: theme.shadows[5],
       padding: theme.spacing(1, 4, 5),
     },
   }));
@@ -160,6 +153,7 @@ export default function Orders() {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  const [selectedData, setSelectedData] = React.useState({});
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -174,8 +168,9 @@ export default function Orders() {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleToggle = () => {
+  const handleToggle = (row) => () => {
     setOpen(!open);
+    setSelectedData(row);
   };
 
   const [values, setValues] = React.useState({
@@ -199,11 +194,6 @@ export default function Orders() {
           <TextField
             id="min-sal"
             label="Minimum Salary"
-            // type="number"
-            // InputLabelProps={{
-            //   shrink: true,
-            // }}
-            // variant="filled"
             onChange={handleChange('minSal')}
             value={values.minSal}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -213,12 +203,6 @@ export default function Orders() {
           <TextField
             id="max-sal"
             label="Maximum Salary"
-            // type="number"
-            // InputLabelProps={{
-            //   shrink: true,
-            // }}
-            // variant="filled"
-            // validator={(input) => isNaN(input)}
             onChange={handleChange('maxSal')}
             value={values.maxSal}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -239,22 +223,6 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.login}</TableCell>
-              <TableCell>S${row.salary}</TableCell>
-              <TableCell>
-                <IconButton color="primary" aria-label="Edit Profile">
-                  <EditIcon/>
-                </IconButton>
-                <IconButton color="secondary" aria-label="Delete Profile" >
-                  <DeleteIcon/>
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))} */}
           {(rowsPerPage > 0
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
@@ -268,10 +236,10 @@ export default function Orders() {
               <TableCell>{row.login}</TableCell>
               <TableCell>S${row.salary}</TableCell>
               <TableCell>
-                <IconButton color="primary" aria-label="Edit Profile" onClick={handleToggle}>
+                <IconButton color="primary" aria-label="Edit Profile" onClick={handleToggle(row)}>
                   <EditIcon/>
                 </IconButton>
-                <IconButton color="secondary" aria-label="Delete Profile" onClick={handleToggle}>
+                <IconButton color="secondary" aria-label="Delete Profile" onClick={handleToggle(row)}>
                   <DeleteIcon/>
                 </IconButton>
               </TableCell>
@@ -308,18 +276,6 @@ export default function Orders() {
       >
         <div className={classes.paper}>
           <Grid container spacing={0}>
-            {/* <Grid item xs={12}>
-              <Grid container spacing={3}>
-                <Grid item xs={3}>
-                  <CancelIcon/>
-                </Grid>
-                <Grid item xs={9}>
-                  <h1 id="simple-modal-title">Edit</h1>
-                </Grid>
-              </Grid>
-              <Divider/>
-            </Grid> */}
-
             <Grid item xs={12}>
               <h1 id="simple-modal-title">Edit</h1>
             </Grid>
@@ -328,16 +284,16 @@ export default function Orders() {
             </Grid>
 
             <Grid item xs={12}>
-              <h3 id="simple-modal-title">Employee Id Lorem Ipsum</h3>
+              <h3 id="simple-modal-title">{selectedData.id}</h3>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="edit-name" label="Name" />
+              <TextField id="edit-name" label="Name" defaultValue={selectedData.name}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="edit-login" label="Login" />
+              <TextField id="edit-login" label="Login" defaultValue={selectedData.login}/>
             </Grid>
             <Grid item xs={12}>
-              <TextField id="edit-salary" label="Salary" />
+              <TextField id="edit-salary" label="Salary" defaultValue={selectedData.salary}/>
             </Grid>
 
             <Grid item xs={12}>
