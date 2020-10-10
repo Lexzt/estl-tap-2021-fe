@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Axios from "axios";
-import { animateScroll as scroll } from "react-scroll";
 import buildUrl from "build-url";
 
 import Table from "@material-ui/core/Table";
@@ -27,7 +26,6 @@ import {
 export default function Orders() {
   const rowsPerPage = 30;
   const URL = "http://localhost:3000";
-
   const headCells = [
     { id: "id", numeric: false, disablePadding: true, label: "ID", sort: true },
     {
@@ -63,9 +61,7 @@ export default function Orders() {
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState([]);
   const [rowsCount, setRowsCount] = React.useState([]);
-
   const handleChangePage = (event, newPage) => {
-    scroll.scrollToTop();
     setPage(newPage);
     setValues({ ...values, offset: newPage * 30 });
   };
@@ -85,6 +81,8 @@ export default function Orders() {
     maxSal: 10000,
     offset: 0,
   });
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("salary");
 
   const handleChange = (prop) => (event) => {
     const regexNumeric = RegExp(/^-?[0-9]+(e[0-9]+)?(\.[0-9]+)?$/);
@@ -92,10 +90,6 @@ export default function Orders() {
       setValues({ ...values, [prop]: parseFloat(event.target.value) });
     }
   };
-
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("salary");
-
   const createSortHandler = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
