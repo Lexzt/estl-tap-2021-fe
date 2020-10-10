@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Axios from "axios";
+import { animateScroll as scroll } from "react-scroll";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -117,19 +118,18 @@ export default function Orders() {
     },
   }));
   const classes = useStyles();
+  const rowsPerPage = 30;
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  // const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [selectedData, setSelectedData] = React.useState({});
   const [rows, setRows] = React.useState([]);
+  const [rowsCount, setRowsCount] = React.useState([]);
 
   const handleChangePage = (event, newPage) => {
+    scroll.scrollToTop();
     setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setValues({ ...values, offset: newPage * 30 });
   };
 
   const [open, setOpen] = React.useState(false);
@@ -144,6 +144,7 @@ export default function Orders() {
   const [values, setValues] = React.useState({
     minSal: 0,
     maxSal: 10000,
+    offset: 0,
   });
 
   const handleChange = (prop) => (event) => {
@@ -153,26 +154,28 @@ export default function Orders() {
     }
   };
 
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('salary');
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("salary");
 
   useEffect(() => {
-    const fetchData = async () => {
-      let sortStr = ""
+    const fetchUsers = async () => {
+      let sortStr = "";
       if (order === "asc") {
-        sortStr = `+${orderBy}`
-      } else if (order === "desc" ) {
-        sortStr = `-${orderBy}`
+        sortStr = `+${orderBy}`;
+      } else if (order === "desc") {
+        sortStr = `-${orderBy}`;
       }
 
       let config = {
         method: "get",
-        url: `http://localhost:3000/users?minSalary=${values.minSal}&maxSalary=${values.maxSal}&offset=0&limit=30&sort=${sortStr}`,
+        url: `http://localhost:3000/users?minSalary=${values.minSal}&maxSalary=${values.maxSal}&offset=${values.offset}&limit=30&sort=${sortStr}`,
         headers: {},
       };
 
+      console.log("getting info");
       const data = await Axios(config)
         .then(function (response) {
+          console.log(response.data.results);
           return response.data.results;
         })
         .catch(function (error) {
@@ -182,24 +185,68 @@ export default function Orders() {
 
       setRows(data);
     };
-    fetchData();
-  }, [order, orderBy, values.maxSal, values.minSal]);
 
+    const fetchUsersCount = async () => {
+      let config = {
+        method: "get",
+        url: `http://localhost:3000/users/count?minSalary=${values.minSal}&maxSalary=${values.maxSal}`,
+        headers: {},
+      };
+
+      const data = await Axios(config)
+        .then(function (response) {
+          console.log(response.data.results);
+          return response.data.results;
+        })
+        .catch(function (error) {
+          console.log(error);
+          return -1;
+        });
+
+      setRowsCount(data);
+    };
+    fetchUsers();
+    fetchUsersCount();
+  }, [order, orderBy, values.maxSal, values.minSal, values.offset]);
 
   const headCells = [
-    { id: 'id', numeric: false, disablePadding: true, label: 'ID', sort: true },
-    { id: 'name', numeric: false, disablePadding: false, label: 'Name', sort: true },
-    { id: 'login', numeric: false, disablePadding: false, label: 'Login', sort: true },
-    { id: 'salary', numeric: false, disablePadding: false, label: 'Salary', sort: true },
-    { id: 'action', numeric: false, disablePadding: false, label: 'Action', sort: false },
+    { id: "id", numeric: false, disablePadding: true, label: "ID", sort: true },
+    {
+      id: "name",
+      numeric: false,
+      disablePadding: false,
+      label: "Name",
+      sort: true,
+    },
+    {
+      id: "login",
+      numeric: false,
+      disablePadding: false,
+      label: "Login",
+      sort: true,
+    },
+    {
+      id: "salary",
+      numeric: false,
+      disablePadding: false,
+      label: "Salary",
+      sort: true,
+    },
+    {
+      id: "action",
+      numeric: false,
+      disablePadding: false,
+      label: "Action",
+      sort: false,
+    },
   ];
 
   const createSortHandler = (property) => (event) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  
+
   return (
     <React.Fragment>
       <Grid container spacing={1}>
@@ -209,7 +256,11 @@ export default function Orders() {
             label="Minimum Salary"
             onChange={handleChange("minSal")}
             value={values.minSal}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">S$</InputAdornment>
+              ),
+            }}
           />
         </Grid>
         <Grid item xs={6}>
@@ -218,7 +269,11 @@ export default function Orders() {
             label="Maximum Salary"
             onChange={handleChange("maxSal")}
             value={values.maxSal}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">S$</InputAdornment>
+              ),
+            }}
           />
         </Grid>
       </Grid>
@@ -226,29 +281,30 @@ export default function Orders() {
       <Title>Employees</Title>
       <Table>
         <TableHead>
-          <TableCell/>
+          <TableCell />
           {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            {headCell.sort ? (<TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "right" : "left"}
+              padding={headCell.disablePadding ? "none" : "default"}
+              sortDirection={orderBy === headCell.id ? order : false}
             >
-              {headCell.label}
-            </TableSortLabel>) : (headCell.label)}
-          </TableCell>
-        ))}
+              {headCell.sort ? (
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : "asc"}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                </TableSortLabel>
+              ) : (
+                headCell.label
+              )}
+            </TableCell>
+          ))}
         </TableHead>
         <TableBody>
-          {(rowsPerPage > 0
-            ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            : rows
-          ).map((row) => (
+          {rows.map((row) => (
             <TableRow>
               <TableCell>
                 <Avatar
@@ -283,16 +339,10 @@ export default function Orders() {
         <TableFooter>
           <TablePagination
             rowsPerPageOptions={[30]}
-            colSpan={3}
-            count={rows.length}
+            count={rowsCount}
             rowsPerPage={rowsPerPage}
             page={page}
-            SelectProps={{
-              inputProps: { "aria-label": "rows per page" },
-              native: true,
-            }}
             onChangePage={handleChangePage}
-            onChangeRowsPerPage={handleChangeRowsPerPage}
             ActionsComponent={TablePaginationActions}
           />
         </TableFooter>
