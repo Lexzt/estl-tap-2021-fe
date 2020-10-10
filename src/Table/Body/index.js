@@ -7,6 +7,7 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Table, TableBody } from "@material-ui/core";
 
 export default function Body(props) {
   const { rows, handleToggle } = props;

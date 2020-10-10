@@ -7,6 +7,7 @@ import {
   TableBody,
   TableFooter,
   TablePagination,
+  TableRow,
 } from "@material-ui/core";
 
 import TablePaginationActions from "../Dashboard/Table/PaginationActions";
@@ -24,7 +25,7 @@ export default function DataTable() {
 
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState([]);
-  const [rowsCount, setRowsCount] = React.useState([]);
+  const [rowsCount, setRowsCount] = React.useState(0);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
     setValues({ ...values, offset: newPage * 30 });
@@ -141,16 +142,17 @@ export default function DataTable() {
         </TableBody>
 
         <TableFooter>
-          <TablePagination
-            rowsPerPageOptions={[30]}
-            count={rowsCount}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onChangePage={handleChangePage}
-            ActionsComponent={TablePaginationActions}
-          />
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[30]}
+              count={rowsCount}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onChangePage={handleChangePage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </TableRow>
         </TableFooter>
-
         <PopUpModal
           open={open}
           handleClose={handleClose}
