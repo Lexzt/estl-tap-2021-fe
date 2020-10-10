@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 
 import FirstPageIcon from "@material-ui/icons/FirstPage";
@@ -77,3 +78,10 @@ export default function TablePaginationActions(props) {
     </div>
   );
 }
+
+TablePaginationActions.propTypes = {
+  count: PropTypes.number,
+  page: PropTypes.number,
+  rowsPerPage: PropTypes.number,
+  onChangePage: PropTypes.func,
+};

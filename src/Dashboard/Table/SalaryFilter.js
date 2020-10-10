@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import { Grid, InputAdornment } from "@material-ui/core";
 
@@ -7,7 +8,7 @@ export default function PopUpModal(props) {
 
   return (
     <Grid container spacing={1}>
-      <Grid item xs={6}>
+      <Grid item xs={5}>
         <TextField
           id="min-sal"
           label="Minimum Salary"
@@ -20,7 +21,10 @@ export default function PopUpModal(props) {
           }}
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={2}>
+        <h3>-</h3>
+      </Grid>
+      <Grid item xs={5}>
         <TextField
           id="max-sal"
           label="Maximum Salary"
@@ -36,3 +40,8 @@ export default function PopUpModal(props) {
     </Grid>
   );
 }
+
+PopUpModal.propTypes = {
+  values: PropTypes.object,
+  handleChange: PropTypes.func,
+};

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import TableHead from "@material-ui/core/TableHead";
 import TableCell from "@material-ui/core/TableCell";
 import { TableSortLabel } from "@material-ui/core";
@@ -64,3 +65,9 @@ export default function TableHeader(props) {
     </TableHead>
   );
 }
+
+TableHeader.propTypes = {
+  orderBy: PropTypes.string,
+  order: PropTypes.string,
+  createSortHandler: PropTypes.func,
+};

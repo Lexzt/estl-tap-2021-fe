@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import Modal from "@material-ui/core/Modal";
 import {
   Divider,
@@ -81,3 +82,9 @@ export default function PopUpModal(props) {
     </Modal>
   );
 }
+
+PopUpModal.propTypes = {
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  selectedData: PropTypes.object,
+};

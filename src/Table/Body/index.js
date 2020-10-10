@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import Avatar from "@material-ui/core/Avatar";
@@ -40,3 +41,8 @@ export default function Body(props) {
     </TableRow>
   ));
 }
+
+Body.propTypes = {
+  rows: PropTypes.array,
+  handleToggle: PropTypes.func,
+};

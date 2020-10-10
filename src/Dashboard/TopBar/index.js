@@ -1,5 +1,5 @@
 import React from "react";
-
+import PropTypes from "prop-types";
 import clsx from "clsx";
 
 import {
@@ -13,7 +13,7 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 
-export default function SideBar(props) {
+export default function TopBar(props) {
   const { open, handleDrawerOpen, classes } = props;
 
   return (
@@ -49,3 +49,9 @@ export default function SideBar(props) {
     </AppBar>
   );
 }
+
+TopBar.propTypes = {
+  open: PropTypes.bool,
+  handleDrawerOpen: PropTypes.func,
+  classes: PropTypes.object.isRequired,
+};

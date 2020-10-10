@@ -18,7 +18,7 @@ import Title from "../Dashboard/Title";
 import Header from "./Header";
 import Body from "./Body";
 
-export default function Orders() {
+export default function DataTable() {
   const rowsPerPage = 30;
   const URL = "http://localhost:3000";
 

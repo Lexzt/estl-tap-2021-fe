@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import clsx from "clsx";
 import List from "@material-ui/core/List";
 
@@ -11,11 +12,12 @@ import {
 import { Divider, Drawer, IconButton, ListItem } from "@material-ui/core";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { mainListItems, userProfile } from "../listItems";
+import MenuItems from "../MenuItems";
 
 export default function SideBar(props) {
   const { open, handleDrawerClose, classes } = props;
   const userName = "Long User Name Lorem Ipsum is simply dummy";
+
   return (
     <Drawer
       variant="permanent"
@@ -42,13 +44,25 @@ export default function SideBar(props) {
         </ListItem>
         <ListItem>
           <ListItemText
-            primary={open ? userName.substr(0, 32) : userName.substr(0, 4)}
+            primary={
+              open
+                ? userName.length > 32
+                  ? userName.substr(0, 32) + "..."
+                  : userName
+                : userName.substr(0, 4)
+            }
           />
         </ListItem>
       </List>
       <Divider />
-      <List>{mainListItems}</List>
+      <List>{MenuItems}</List>
       <Divider />
     </Drawer>
   );
 }
+
+SideBar.propTypes = {
+  open: PropTypes.bool,
+  handleDrawerClose: PropTypes.func,
+  classes: PropTypes.object.isRequired,
+};

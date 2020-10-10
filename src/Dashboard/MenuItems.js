@@ -7,25 +7,8 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
-import Avatar from "@material-ui/core/Avatar";
 
-export const userProfile = (
-  <div>
-    <ListItem>
-      <ListItemIcon>
-        <Avatar>OP</Avatar>
-      </ListItemIcon>
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Long User Name" />
-    </ListItem>
-  </div>
-);
-
-export const mainListItems = (
+export default (
   <div>
     <ListItem button>
       <ListItemIcon>
