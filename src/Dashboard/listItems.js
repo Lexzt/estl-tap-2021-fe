@@ -13,7 +13,7 @@ export const userProfile = (
   <div>
     <ListItem>
       <ListItemIcon>
-        <Avatar component="span">OP</Avatar>
+        <Avatar>OP</Avatar>
       </ListItemIcon>
     </ListItem>
     <ListItem button>

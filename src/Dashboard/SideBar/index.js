@@ -2,7 +2,12 @@ import React from "react";
 import clsx from "clsx";
 import List from "@material-ui/core/List";
 
-import { Avatar, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+  Avatar,
+  ListItemAvatar,
+  ListItemIcon,
+  ListItemText,
+} from "@material-ui/core";
 import { Divider, Drawer, IconButton, ListItem } from "@material-ui/core";
 
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -10,6 +15,7 @@ import { mainListItems, userProfile } from "../listItems";
 
 export default function SideBar(props) {
   const { open, handleDrawerClose, classes } = props;
+  const userName = "Long User Name Lorem Ipsum is simply dummy";
   return (
     <Drawer
       variant="permanent"
@@ -23,16 +29,23 @@ export default function SideBar(props) {
           <ChevronLeftIcon />
         </IconButton>
       </div>
-      <div>
+      <List>
         <ListItem>
           <ListItemIcon>
-            <Avatar className={classes.small} src="/1.jpg" />
+            <ListItemAvatar>
+              <Avatar
+                style={{ width: "24px", height: "24px" }}
+                src="https://material-ui.com/static/images/avatar/3.jpg"
+              />
+            </ListItemAvatar>
           </ListItemIcon>
         </ListItem>
-        <ListItem button>
-          <ListItemText primary="Long User Name" />
+        <ListItem>
+          <ListItemText
+            primary={open ? userName.substr(0, 32) : userName.substr(0, 4)}
+          />
         </ListItem>
-      </div>
+      </List>
       <Divider />
       <List>{mainListItems}</List>
       <Divider />
