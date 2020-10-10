@@ -1,19 +1,23 @@
 import React, { useEffect } from "react";
+import Axios from "axios";
+
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import Title from "./Title";
+import Avatar from "@material-ui/core/Avatar";
+import Modal from "@material-ui/core/Modal";
+import TextField from "@material-ui/core/TextField";
 
-import IconButton from "@material-ui/core/IconButton";
+import Title from "./Title";
 
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-
+import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {
@@ -23,71 +27,14 @@ import {
   InputAdornment,
   TableFooter,
   TablePagination,
+  TableSortLabel,
 } from "@material-ui/core";
-
-import Avatar from "@material-ui/core/Avatar";
-
-import Modal from "@material-ui/core/Modal";
-import TextField from "@material-ui/core/TextField";
-import Axios from "axios";
-
-// Generate Order Data
-function createData(id, name, login, salary) {
-  return { id, name, login, salary };
-}
-
-const rows = [
-  createData("e0001", "hpotter", "Harry Potter", 1234),
-  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
-  createData("e0003", "ssnape", "Severus Snape", 4000),
-  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
-  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
-  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
-  createData("e0007", "hgranger", "Hermione Granger", 0),
-  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
-  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
-  createData("e0001", "hpotter", "Harry Potter", 1234),
-  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
-  createData("e0003", "ssnape", "Severus Snape", 4000),
-  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
-  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
-  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
-  createData("e0007", "hgranger", "Hermione Granger", 0),
-  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
-  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
-  createData("e0001", "hpotter", "Harry Potter", 1234),
-  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
-  createData("e0003", "ssnape", "Severus Snape", 4000),
-  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
-  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
-  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
-  createData("e0007", "hgranger", "Hermione Granger", 0),
-  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
-  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
-  createData("e0001", "hpotter", "Harry Potter", 1234),
-  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
-  createData("e0003", "ssnape", "Severus Snape", 4000),
-  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
-  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
-  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
-  createData("e0007", "hgranger", "Hermione Granger", 0),
-  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
-  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
-  createData("e0001", "hpotter", "Harry Potter", 1234),
-  createData("e0002", "rwesley", "Ron Weasley", 19234.5),
-  createData("e0003", "ssnape", "Severus Snape", 4000),
-  createData("e0004", "rhagrid", "Rubeus Hagrid", 3999.999),
-  createData("e0005", "voldemort", "Lord Voldemort", 523.4),
-  createData("e0006", "gwesley", "Ginny Weasley", 4000.004),
-  createData("e0007", "hgranger", "Hermione Granger", 0),
-  createData("e0008", "adumbledore", "Albus Dumbledore", 34.23),
-  createData("e0009", "dmalfoy", "Draco Malfoy", 34234.5),
-];
 
 const useStyles1 = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
     marginLeft: theme.spacing(2.5),
+    // textAlign: "center",
   },
 }));
 
@@ -196,41 +143,63 @@ export default function Orders() {
 
   const [values, setValues] = React.useState({
     minSal: 0,
-    maxSal: 0,
+    maxSal: 10000,
   });
 
   const handleChange = (prop) => (event) => {
-    console.log(event.target.value, values);
-    if (isNaN(event.target.value)) {
-      return;
-    } else {
+    const regexNumeric = RegExp(/^\-?[0-9]+(e[0-9]+)?(\.[0-9]+)?$/);
+    if (regexNumeric.test(event.target.value)) {
       setValues({ ...values, [prop]: parseFloat(event.target.value) });
     }
   };
 
+  const [order, setOrder] = React.useState('asc');
+  const [orderBy, setOrderBy] = React.useState('salary');
+
   useEffect(() => {
     const fetchData = async () => {
+      let sortStr = ""
+      if (order === "asc") {
+        sortStr = `+${orderBy}`
+      } else if (order === "desc" ) {
+        sortStr = `-${orderBy}`
+      }
+
       let config = {
         method: "get",
-        url:
-          "http://localhost:3000/users?minSalary=0&maxSalary=4000&offset=1&limit=30&sort=+salary",
+        url: `http://localhost:3000/users?minSalary=${values.minSal}&maxSalary=${values.maxSal}&offset=0&limit=30&sort=${sortStr}`,
         headers: {},
       };
 
       const data = await Axios(config)
         .then(function (response) {
-          console.log(response.data);
           return response.data.results;
         })
         .catch(function (error) {
           console.log(error);
+          return [];
         });
 
       setRows(data);
     };
     fetchData();
-  }, []);
+  }, [order, orderBy, values.maxSal, values.minSal]);
 
+
+  const headCells = [
+    { id: 'id', numeric: false, disablePadding: true, label: 'ID', sort: true },
+    { id: 'name', numeric: false, disablePadding: false, label: 'Name', sort: true },
+    { id: 'login', numeric: false, disablePadding: false, label: 'Login', sort: true },
+    { id: 'salary', numeric: false, disablePadding: false, label: 'Salary', sort: true },
+    { id: 'action', numeric: false, disablePadding: false, label: 'Action', sort: false },
+  ];
+
+  const createSortHandler = (property) => (event) => {
+    const isAsc = orderBy === property && order === 'asc';
+    setOrder(isAsc ? 'desc' : 'asc');
+    setOrderBy(property);
+  };
+  
   return (
     <React.Fragment>
       <Grid container spacing={1}>
@@ -257,14 +226,23 @@ export default function Orders() {
       <Title>Employees</Title>
       <Table>
         <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Id</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Login</TableCell>
-            <TableCell>Salary</TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
+          <TableCell/>
+          {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            align={headCell.numeric ? 'right' : 'left'}
+            padding={headCell.disablePadding ? 'none' : 'default'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            {headCell.sort ? (<TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : 'asc'}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+            </TableSortLabel>) : (headCell.label)}
+          </TableCell>
+        ))}
         </TableHead>
         <TableBody>
           {(rowsPerPage > 0
@@ -303,22 +281,20 @@ export default function Orders() {
         </TableBody>
 
         <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[30]}
-              colSpan={3}
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: { "aria-label": "rows per page" },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
+          <TablePagination
+            rowsPerPageOptions={[30]}
+            colSpan={3}
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            SelectProps={{
+              inputProps: { "aria-label": "rows per page" },
+              native: true,
+            }}
+            onChangePage={handleChangePage}
+            onChangeRowsPerPage={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
         </TableFooter>
       </Table>
 
