@@ -121,7 +121,6 @@ export default function Orders() {
   const rowsPerPage = 30;
 
   const [page, setPage] = React.useState(0);
-  // const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [selectedData, setSelectedData] = React.useState({});
   const [rows, setRows] = React.useState([]);
   const [rowsCount, setRowsCount] = React.useState([]);
@@ -172,14 +171,10 @@ export default function Orders() {
         headers: {},
       };
 
-      console.log("getting info");
       const data = await Axios(config)
-        .then(function (response) {
-          console.log(response.data.results);
-          return response.data.results;
-        })
-        .catch(function (error) {
-          console.log(error);
+        .then((response) => response.data.results)
+        .catch((error) => {
+          console.error("Retrieve Users Error: ", error);
           return [];
         });
 
@@ -194,12 +189,9 @@ export default function Orders() {
       };
 
       const data = await Axios(config)
-        .then(function (response) {
-          console.log(response.data.results);
-          return response.data.results;
-        })
-        .catch(function (error) {
-          console.log(error);
+        .then((response) => response.data.results)
+        .catch((error) => {
+          console.error("Retrieve Users Count Error: ", error);
           return -1;
         });
 
