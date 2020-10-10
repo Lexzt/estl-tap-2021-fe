@@ -6,10 +6,7 @@ export default function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        ESTL Prototype
-      </Link>{" "}
-      {new Date().getFullYear()}
+      <Link color="inherit">ESTL Prototype</Link> {new Date().getFullYear()}
       {"."}
     </Typography>
   );

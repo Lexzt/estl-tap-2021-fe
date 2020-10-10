@@ -6,7 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 
 import Copyright from "../../Copyright";
-import Orders from "../Orders";
+import Orders from "../../Table";
 
 export default function Content(props) {
   const { classes } = props;

@@ -2,61 +2,25 @@ import React, { useEffect } from "react";
 import Axios from "axios";
 import buildUrl from "build-url";
 
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import Avatar from "@material-ui/core/Avatar";
-
-import Title from "./Title";
-import TablePaginationActions from "./Table/PaginationActions";
-import PopUpModal from "./Table/PopUpModal";
-import SalaryFilter from "./Table/SalaryFilter";
-
-import IconButton from "@material-ui/core/IconButton";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import {
+  Table,
+  TableBody,
   TableFooter,
   TablePagination,
-  TableSortLabel,
 } from "@material-ui/core";
+
+import TablePaginationActions from "../Dashboard/Table/PaginationActions";
+import PopUpModal from "../Dashboard/Table/PopUpModal";
+import SalaryFilter from "../Dashboard/Table/SalaryFilter";
+
+import Title from "../Dashboard/Title";
+
+import Header from "./Header";
+import Body from "./Body";
 
 export default function Orders() {
   const rowsPerPage = 30;
   const URL = "http://localhost:3000";
-  const headCells = [
-    { id: "id", numeric: false, disablePadding: true, label: "ID", sort: true },
-    {
-      id: "name",
-      numeric: false,
-      disablePadding: false,
-      label: "Name",
-      sort: true,
-    },
-    {
-      id: "login",
-      numeric: false,
-      disablePadding: false,
-      label: "Login",
-      sort: true,
-    },
-    {
-      id: "salary",
-      numeric: false,
-      disablePadding: false,
-      label: "Salary",
-      sort: true,
-    },
-    {
-      id: "action",
-      numeric: false,
-      disablePadding: false,
-      label: "Action",
-      sort: false,
-    },
-  ];
 
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState([]);
@@ -166,60 +130,14 @@ export default function Orders() {
 
       <Title>Employees</Title>
       <Table>
-        <TableHead>
-          <TableCell />
-          {headCells.map((headCell) => (
-            <TableCell
-              key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
-              padding={headCell.disablePadding ? "none" : "default"}
-              sortDirection={orderBy === headCell.id ? order : false}
-            >
-              {headCell.sort ? (
-                <TableSortLabel
-                  active={orderBy === headCell.id}
-                  direction={orderBy === headCell.id ? order : "asc"}
-                  onClick={createSortHandler(headCell.id)}
-                >
-                  {headCell.label}
-                </TableSortLabel>
-              ) : (
-                headCell.label
-              )}
-            </TableCell>
-          ))}
-        </TableHead>
+        <Header
+          orderBy={orderBy}
+          order={order}
+          createSortHandler={createSortHandler}
+        />
+
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>
-                <Avatar
-                  alt="Remy Sharp"
-                  src="https://material-ui.com/static/images/avatar/3.jpg"
-                />
-              </TableCell>
-              <TableCell>{row.id}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.login}</TableCell>
-              <TableCell>S${row.salary}</TableCell>
-              <TableCell>
-                <IconButton
-                  color="primary"
-                  aria-label="Edit Profile"
-                  onClick={handleToggle(row)}
-                >
-                  <EditIcon />
-                </IconButton>
-                <IconButton
-                  color="secondary"
-                  aria-label="Delete Profile"
-                  onClick={handleToggle(row)}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+          <Body rows={rows} handleToggle={handleToggle} />
         </TableBody>
 
         <TableFooter>
