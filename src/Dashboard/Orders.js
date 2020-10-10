@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Axios from "axios";
 import { animateScroll as scroll } from "react-scroll";
+import buildUrl from "build-url";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
@@ -156,6 +157,8 @@ export default function Orders() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("salary");
 
+  const URL = "http://localhost:3000";
+
   useEffect(() => {
     const fetchUsers = async () => {
       let sortStr = "";
@@ -165,9 +168,20 @@ export default function Orders() {
         sortStr = `-${orderBy}`;
       }
 
-      let config = {
-        method: "get",
-        url: `http://localhost:3000/users?minSalary=${values.minSal}&maxSalary=${values.maxSal}&offset=${values.offset}&limit=30&sort=${sortStr}`,
+      const getURL = buildUrl(URL, {
+        path: "users",
+        queryParams: {
+          minSalary: values.minSal,
+          maxSalary: values.maxSal,
+          offset: values.offset,
+          limit: 30,
+          sort: sortStr,
+        },
+      });
+
+      const config = {
+        method: "GET",
+        url: getURL.toString(),
         headers: {},
       };
 
@@ -182,9 +196,17 @@ export default function Orders() {
     };
 
     const fetchUsersCount = async () => {
-      let config = {
-        method: "get",
-        url: `http://localhost:3000/users/count?minSalary=${values.minSal}&maxSalary=${values.maxSal}`,
+      const getURL = buildUrl(URL, {
+        path: "users/count",
+        queryParams: {
+          minSalary: values.minSal,
+          maxSalary: values.maxSal,
+        },
+      });
+
+      const config = {
+        method: "GET",
+        url: getURL.toString(),
         headers: {},
       };
 
@@ -297,7 +319,7 @@ export default function Orders() {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow>
+            <TableRow key={row.id}>
               <TableCell>
                 <Avatar
                   alt="Remy Sharp"
