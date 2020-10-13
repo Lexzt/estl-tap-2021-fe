@@ -55,6 +55,25 @@ export default function DataTable() {
       setValues({ ...values, [prop]: parseFloat(event.target.value) });
     }
   };
+
+  const handleDelete = (prop) => (event) => {
+    console.log(prop, event);
+
+    let config = {
+      method: "delete",
+      url: `http://localhost:3000/users/${prop.id}`,
+      headers: {},
+    };
+
+    Axios(config)
+      .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        setRows(rows.filter((row) => row.id !== prop.id));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
   const createSortHandler = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -138,7 +157,11 @@ export default function DataTable() {
         />
 
         <TableBody>
-          <Body rows={rows} handleToggle={handleToggle} />
+          <Body
+            rows={rows}
+            handleToggle={handleToggle}
+            handleDelete={handleDelete}
+          />
         </TableBody>
 
         <TableFooter>

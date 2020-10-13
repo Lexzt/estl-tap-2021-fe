@@ -9,7 +9,7 @@ import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 
 export default function Body(props) {
-  const { rows, handleToggle } = props;
+  const { rows, handleToggle, handleDelete } = props;
   return rows.map((row) => (
     <TableRow key={row.id}>
       <TableCell>
@@ -33,7 +33,7 @@ export default function Body(props) {
         <IconButton
           color="secondary"
           aria-label="Delete Profile"
-          onClick={handleToggle(row)}
+          onClick={handleDelete(row)}
         >
           <DeleteIcon />
         </IconButton>
@@ -45,4 +45,5 @@ export default function Body(props) {
 Body.propTypes = {
   rows: PropTypes.array,
   handleToggle: PropTypes.func,
+  handleDelete: PropTypes.func,
 };
