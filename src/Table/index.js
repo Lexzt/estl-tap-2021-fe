@@ -21,7 +21,7 @@ import Body from "./Body";
 
 export default function DataTable() {
   const rowsPerPage = 30;
-  const URL = "http://localhost:3000";
+  const URL = "http://localhost:8000";
 
   const [page, setPage] = React.useState(0);
   const [rows, setRows] = React.useState([]);
@@ -59,7 +59,7 @@ export default function DataTable() {
   const handleDelete = (prop) => (event) => {
     let config = {
       method: "delete",
-      url: `http://localhost:3000/users/${prop.id}`,
+      url: `http://localhost:8000/users/${prop.id}`,
       headers: {},
     };
 
@@ -91,7 +91,7 @@ export default function DataTable() {
 
     const config = {
       method: "patch",
-      url: `http://localhost:3000/users/${selectedData.id}`,
+      url: `http://localhost:8000/users/${selectedData.id}`,
       headers: {
         "Content-Type": "application/json",
       },
