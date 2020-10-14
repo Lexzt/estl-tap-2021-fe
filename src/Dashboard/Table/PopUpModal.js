@@ -8,6 +8,7 @@ import {
   TextField,
   Button,
 } from "@material-ui/core";
+import Alert from "@material-ui/lab/Alert";
 
 export default function PopUpModal(props) {
   const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,14 @@ export default function PopUpModal(props) {
           <Grid item xs={12}>
             <Divider />
           </Grid>
+
+          {selectedData.error !== undefined ? (
+            <Grid item xs={12}>
+              <Alert severity="error">{selectedData.error}</Alert>
+            </Grid>
+          ) : (
+            <></>
+          )}
 
           <Grid item xs={12}>
             <h3 id="simple-modal-title">{selectedData.id}</h3>

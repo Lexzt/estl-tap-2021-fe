@@ -57,8 +57,6 @@ export default function DataTable() {
   };
 
   const handleDelete = (prop) => (event) => {
-    console.log(prop, event);
-
     let config = {
       method: "delete",
       url: `http://localhost:3000/users/${prop.id}`,
@@ -76,8 +74,6 @@ export default function DataTable() {
   };
 
   const onSubmit = (prop) => {
-    console.log(prop, selectedData);
-
     const regexNumeric = RegExp(/^-?[0-9]+(e[0-9]+)?(\.[0-9]+)?$/);
     if (!regexNumeric.test(selectedData.salary)) {
       console.error("invalid salary input");
@@ -89,7 +85,6 @@ export default function DataTable() {
       name: selectedData.name,
       salary: parseFloat(selectedData.salary),
     });
-    console.log(data);
 
     const config = {
       method: "patch",
@@ -107,7 +102,11 @@ export default function DataTable() {
         setRows([...prevData, selectedData]);
       })
       .catch(function (error) {
-        console.log(error);
+        console.log(error.response);
+        setSelectedData({
+          ...selectedData,
+          error: error.response.data.message,
+        });
       });
   };
 
