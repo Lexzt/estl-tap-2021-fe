@@ -13,6 +13,7 @@ test("Closed Pop Up Modal", () => {
         name: "",
         salary: "",
       }}
+      onChange={() => {}}
     />
   );
   expect(container).toMatchInlineSnapshot("<div />");
@@ -26,7 +27,12 @@ test("Open Pop Up Modal", () => {
     salary: "12345",
   };
   const { container, debug, getByText, getByLabelText, getBy } = render(
-    <PopUpModal open={true} handleClose={() => {}} selectedData={fakeObj} />
+    <PopUpModal
+      open={true}
+      handleClose={() => {}}
+      selectedData={fakeObj}
+      onChange={() => {}}
+    />
   );
 
   expect(getByText(fakeObj.id)).toBeInTheDocument();

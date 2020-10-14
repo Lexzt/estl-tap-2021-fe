@@ -7,7 +7,7 @@ test("Table Body (No Rows)", () => {
   const { container, debug } = render(
     <Table>
       <TableBody>
-        <Body rows={[]} handleToggle={() => {}} />
+        <Body rows={[]} handleToggle={() => {}} handleDelete={() => {}} />
       </TableBody>
     </Table>
   );
@@ -34,7 +34,7 @@ test("Table Body (2 Rows)", () => {
   const { container, debug, getByText } = render(
     <Table>
       <TableBody>
-        <Body rows={fakeData} handleToggle={() => {}} />
+        <Body rows={fakeData} handleToggle={() => {}} handleDelete={() => {}} />
       </TableBody>
     </Table>
   );

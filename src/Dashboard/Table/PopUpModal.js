@@ -22,7 +22,7 @@ export default function PopUpModal(props) {
   }));
   const classes = useStyles();
 
-  const { open, handleClose, selectedData } = props;
+  const { open, handleClose, selectedData, onSubmit, onChange } = props;
 
   return (
     <Modal
@@ -53,6 +53,7 @@ export default function PopUpModal(props) {
               id="edit-name"
               label="Name"
               defaultValue={selectedData.name}
+              onChange={onChange("name")}
             />
           </Grid>
           <Grid item xs={12}>
@@ -60,6 +61,7 @@ export default function PopUpModal(props) {
               id="edit-login"
               label="Login"
               defaultValue={selectedData.login}
+              onChange={onChange("login")}
             />
           </Grid>
           <Grid item xs={12}>
@@ -67,6 +69,7 @@ export default function PopUpModal(props) {
               id="edit-salary"
               label="Salary"
               defaultValue={selectedData.salary}
+              onChange={onChange("salary")}
             />
           </Grid>
 
@@ -75,7 +78,9 @@ export default function PopUpModal(props) {
           </Grid>
 
           <Grid item xs={12}>
-            <Button variant="contained">Save</Button>
+            <Button variant="contained" onClick={onSubmit}>
+              Save
+            </Button>
           </Grid>
         </Grid>
       </div>
@@ -87,4 +92,5 @@ PopUpModal.propTypes = {
   open: PropTypes.bool,
   handleClose: PropTypes.func,
   selectedData: PropTypes.object,
+  onSubmit: PropTypes.func,
 };

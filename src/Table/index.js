@@ -74,6 +74,47 @@ export default function DataTable() {
         console.log(error);
       });
   };
+
+  const onSubmit = (prop) => {
+    console.log(prop, selectedData);
+
+    const regexNumeric = RegExp(/^-?[0-9]+(e[0-9]+)?(\.[0-9]+)?$/);
+    if (!regexNumeric.test(selectedData.salary)) {
+      console.error("invalid salary input");
+      return;
+    }
+
+    const data = JSON.stringify({
+      login: selectedData.login,
+      name: selectedData.name,
+      salary: parseFloat(selectedData.salary),
+    });
+    console.log(data);
+
+    const config = {
+      method: "patch",
+      url: `http://localhost:3000/users/${selectedData.id}`,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: data,
+    };
+
+    Axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        const prevData = rows.filter((row) => row.id !== selectedData.id);
+        setRows([...prevData, selectedData]);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const handleSelectedValueChange = (prop) => (event) => {
+    setSelectedData({ ...selectedData, [prop]: event.target.value });
+  };
+
   const createSortHandler = (property) => (event) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -180,6 +221,8 @@ export default function DataTable() {
           open={open}
           handleClose={handleClose}
           selectedData={selectedData}
+          onSubmit={onSubmit}
+          onChange={handleSelectedValueChange}
         />
       </Table>
     </React.Fragment>

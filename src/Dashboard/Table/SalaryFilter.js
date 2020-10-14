@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 import { Grid, InputAdornment } from "@material-ui/core";
 
-export default function PopUpModal(props) {
+export default function SalaryFilter(props) {
   const { values, handleChange } = props;
 
   return (
@@ -41,7 +41,7 @@ export default function PopUpModal(props) {
   );
 }
 
-PopUpModal.propTypes = {
+SalaryFilter.propTypes = {
   values: PropTypes.object,
   handleChange: PropTypes.func,
 };
