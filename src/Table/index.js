@@ -76,7 +76,10 @@ export default function DataTable() {
   const onSubmit = (prop) => {
     const regexNumeric = RegExp(/^-?[0-9]+(e[0-9]+)?(\.[0-9]+)?$/);
     if (!regexNumeric.test(selectedData.salary)) {
-      console.error("invalid salary input");
+      setSelectedData({
+        ...selectedData,
+        error: "Invalid salary input",
+      });
       return;
     }
 
@@ -97,9 +100,24 @@ export default function DataTable() {
 
     Axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
         const prevData = rows.filter((row) => row.id !== selectedData.id);
-        setRows([...prevData, selectedData]);
+
+        let indexToSpliceAt = 0;
+        for (let i = 0; i < rows.length; i++) {
+          if (rows[i].id === selectedData.id) {
+            indexToSpliceAt = i;
+            break;
+          }
+        }
+
+        delete selectedData.error;
+        prevData.splice(indexToSpliceAt, prevData, selectedData);
+        setRows(prevData);
+        setSelectedData({
+          ...selectedData,
+          error: undefined,
+        });
+        setOpen(false);
       })
       .catch(function (error) {
         console.log(error.response);
